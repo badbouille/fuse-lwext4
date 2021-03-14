@@ -43,7 +43,7 @@ static inline void set_fi_dir(struct fuse_file_info *fi, ext4_dir *dir)
 
 static inline ext4_file *alloc_ext4_file(void)
 {
-	return calloc(1, sizeof(ext4_file));
+	return (ext4_file *)calloc(1, sizeof(ext4_file));
 }
 
 static inline void free_ext4_file(ext4_file *f)
@@ -53,7 +53,7 @@ static inline void free_ext4_file(ext4_file *f)
 
 static inline ext4_dir *alloc_ext4_dir(void)
 {
-	return calloc(1, sizeof(ext4_dir));
+	return (ext4_dir *)calloc(1, sizeof(ext4_dir));
 }
 
 static inline void free_ext4_dir(ext4_dir *d)
