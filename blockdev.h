@@ -3,7 +3,7 @@
 
 #include "lwext4.h"
 
-int blockdev_get(char *fname, struct ext4_blockdev **pbdev);
+int blockdev_get(const char *fname, struct ext4_blockdev **pbdev);
 void blockdev_put(struct ext4_blockdev *bdev);
 
 #endif

@@ -59,7 +59,7 @@ struct block_dev {
 #define FREE_BDEV(p) free(p)
 
 /**********************BLOCKDEV INTERFACE**************************************/
-int blockdev_get(char *fname, struct ext4_blockdev **pbdev);
+int blockdev_get(const char *fname, struct ext4_blockdev **pbdev);
 void blockdev_put(struct ext4_blockdev *bdev);
 static int blockdev_open(struct ext4_blockdev *bdev);
 static int blockdev_bread(struct ext4_blockdev *bdev, void *buf, uint64_t blk_id,
@@ -85,7 +85,7 @@ static void __blockdev_put(int fd)
 		close(fd);
 }
 
-int blockdev_get(char *fname, struct ext4_blockdev **pbdev)
+int blockdev_get(const char *fname, struct ext4_blockdev **pbdev)
 {
 	struct block_dev *bdev;
 	int dev_file = __blockdev_get(fname);
