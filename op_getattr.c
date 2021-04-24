@@ -17,14 +17,14 @@
 #include "lwext4.h"
 #include "logging.h"
 
-int op_getattr(const char *path, struct stat *stbuf)
+int op_getattr(const char *path, struct fuse_stat *stbuf)
 {
 	struct ext4_inode inode;
 	struct ext4_sblock *sb;
 	int rc = 0;
 	uint32_t ino;
 
-	memset(stbuf, 0, sizeof(struct stat));
+	memset(stbuf, 0, sizeof(struct fuse_stat));
 
 	rc = LWEXT4_CALL(ext4_raw_inode_fill, path, &ino, &inode);
 	if (rc)
@@ -40,9 +40,9 @@ int op_getattr(const char *path, struct stat *stbuf)
 	stbuf->st_blocks = ext4_inode_get_blocks_count(sb, &inode);
 	stbuf->st_uid = ext4_inode_get_uid(&inode);
 	stbuf->st_gid = ext4_inode_get_gid(&inode);
-	stbuf->st_atime = ext4_inode_get_access_time(&inode);
-	stbuf->st_mtime = ext4_inode_get_modif_time(&inode);
-	stbuf->st_ctime = ext4_inode_get_change_inode_time(&inode);
+	stbuf->st_atim.tv_sec = ext4_inode_get_access_time(&inode);
+	stbuf->st_mtim.tv_sec = ext4_inode_get_modif_time(&inode);
+	stbuf->st_ctim.tv_sec = ext4_inode_get_change_inode_time(&inode);
 
 	return 0;
 }

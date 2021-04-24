@@ -4,7 +4,6 @@
 #include "acl.h"
 
 #include <errno.h>
-#include <sys/acl.h>
 
 
 static inline size_t acl_ea_size(int count)

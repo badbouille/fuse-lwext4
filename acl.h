@@ -4,6 +4,23 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
+#include <sys/acl.h>
+#else
+/*=== Constants ===*/
+
+/* 23.2.5 acl_tag_t values */
+
+#define ACL_UNDEFINED_TAG	(0x00)
+#define ACL_USER_OBJ		(0x01)
+#define ACL_USER		(0x02)
+#define ACL_GROUP_OBJ		(0x04)
+#define ACL_GROUP		(0x08)
+#define ACL_MASK		(0x10)
+#define ACL_OTHER		(0x20)
+
+#endif
+
 /*
  * Copied from acl_ea.h in libacl source; ACLs have to be sent to and from fuse
  * in this format... at least on Linux.
@@ -20,7 +37,7 @@ typedef struct {
 } acl_ea_entry;
 
 typedef struct {
-	u_int32_t	a_version;
+	int32_t	a_version;
 	acl_ea_entry	a_entries[0];
 } acl_ea_header;
 

@@ -18,7 +18,7 @@
 #include "lwext4.h"
 
 /* Copied from http://web.mit.edu/~tcoffee/Public/rss/common/timespec.c */
-static void timespec_now(struct timespec *ts)
+static void timespec_now(struct fuse_timespec *ts)
 {
 	struct timeval  tv;
 
@@ -27,20 +27,20 @@ static void timespec_now(struct timespec *ts)
 	ts->tv_nsec = tv.tv_usec * 1000;
 }
 
-static uint32_t timespec_to_second(const struct timespec *ts)
+static uint32_t timespec_to_second(const struct fuse_timespec *ts)
 {
 	return ts->tv_sec;
 }
 
 #if !defined(__FreeBSD__)
-int op_utimens(const char *path, const struct timespec tv[2])
+int op_utimens(const char *path, const struct fuse_timespec tv[2])
 {
 	int rc;
 	uint32_t atime, mtime;
 #if defined(UTIME_OMIT) && defined(UTIME_NOW)
 	if (tv[0].tv_nsec != UTIME_OMIT) {
 		if (tv[0].tv_nsec == UTIME_NOW) {
-			struct timespec ts;
+			struct fuse_timespec ts;
 			timespec_now(&ts);
 			atime = timespec_to_second(&ts);
 		} else
@@ -55,7 +55,7 @@ int op_utimens(const char *path, const struct timespec tv[2])
 	}
 	if (tv[1].tv_nsec != UTIME_OMIT) {
 		if (tv[1].tv_nsec == UTIME_NOW) {
-			struct timespec ts;
+			struct fuse_timespec ts;
 			timespec_now(&ts);
 			mtime = timespec_to_second(&ts);
 		} else
@@ -74,11 +74,11 @@ int op_utimens(const char *path, const struct timespec tv[2])
 }
 #endif
 
-int op_utimes(const char *path, struct utimbuf *utimbuf)
+int op_utimes(const char *path, struct fuse_utimbuf *utimbuf)
 {
 	int rc;
 	time_t atime, mtime, ctime;
-	struct timespec ts;
+	struct fuse_timespec ts;
 	timespec_now(&ts);
 	if (!utimbuf) {
 		atime = mtime = timespec_to_second(&ts);

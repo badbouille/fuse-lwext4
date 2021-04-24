@@ -12,7 +12,7 @@
 #include "ops.h"
 #include "lwext4.h"
 
-int op_truncate (const char *path, off_t length)
+int op_truncate (const char *path, fuse_off_t length)
 {
 	int rc;
 	ext4_file *f;
@@ -33,7 +33,7 @@ out:
 
 }
 
-int op_ftruncate (const char *path, off_t length, struct fuse_file_info *fi)
+int op_ftruncate (const char *path, fuse_off_t length, struct fuse_file_info *fi)
 {
 	int rc;
 	ext4_file *f = get_fi_file(fi);

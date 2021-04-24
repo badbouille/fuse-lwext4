@@ -15,7 +15,7 @@
 #include "ops.h"
 #include "lwext4.h"
 
-int op_chown(const char *path, uid_t uid, gid_t gid)
+int op_chown(const char *path, fuse_uid_t uid, fuse_gid_t gid)
 {
 	return LWEXT4_CALL(ext4_owner_set, path, uid, gid);
 }

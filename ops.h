@@ -7,6 +7,41 @@
 #include <stdlib.h>
 #include "blockdev.h"
 
+/* Custom redefinitions for Winfsp usage */
+/* Imported from Winfsp Cygwin configuration */
+#ifdef __linux__
+#include <fcntl.h>
+#include <pthread.h>
+#include <signal.h>
+#include <sys/stat.h>
+#include <sys/statvfs.h>
+#include <sys/types.h>
+#include <utime.h>
+
+#define fuse_uid_t                      uid_t
+#define fuse_gid_t                      gid_t
+#define fuse_pid_t                      pid_t
+
+#define fuse_dev_t                      dev_t
+#define fuse_ino_t                      ino_t
+#define fuse_mode_t                     mode_t
+#define fuse_nlink_t                    nlink_t
+#define fuse_off_t                      off_t
+
+#define fuse_fsblkcnt_t                 fsblkcnt_t
+#define fuse_fsfilcnt_t                 fsfilcnt_t
+#define fuse_blksize_t                  blksize_t
+#define fuse_blkcnt_t                   blkcnt_t
+
+#define fuse_utimbuf                    utimbuf
+#define fuse_timespec                   timespec
+
+#define fuse_stat                       stat
+
+#define fuse_statvfs                    statvfs
+#define fuse_flock                      flock
+#endif
+
 /* fuse-lwext4 options. */
 struct fuse_lwext4_options {
 	char *disk;
@@ -64,24 +99,24 @@ static inline void free_ext4_dir(ext4_dir *d)
 void *op_init(struct fuse_conn_info *info);
 void op_destroy(void *);
 int op_readlink(const char *path, char *buf, size_t bufsize);
-int op_read(const char *path, char *buf, size_t size, off_t offset,
+int op_read(const char *path, char *buf, size_t size, fuse_off_t offset,
 	    struct fuse_file_info *fi);
-int op_write(const char *path, const char *buf, size_t size, off_t offset,
+int op_write(const char *path, const char *buf, size_t size, fuse_off_t offset,
 		struct fuse_file_info *fi);
-int op_truncate (const char *path, off_t length);
-int op_ftruncate (const char *path, off_t length, struct fuse_file_info *fi);
-int op_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset,
+int op_truncate (const char *path, fuse_off_t length);
+int op_ftruncate (const char *path, fuse_off_t length, struct fuse_file_info *fi);
+int op_readdir(const char *path, void *buf, fuse_fill_dir_t filler, fuse_off_t offset,
 		struct fuse_file_info *fi);
-int op_getattr(const char *path, struct stat *stbuf);
+int op_getattr(const char *path, struct fuse_stat *stbuf);
 int op_open(const char *path, struct fuse_file_info *fi);
-int op_create(const char *path, mode_t mode, struct fuse_file_info *fi);
+int op_create(const char *path, fuse_mode_t mode, struct fuse_file_info *fi);
 int op_release(const char *path, struct fuse_file_info *fi);
 
 int op_opendir(const char *path, struct fuse_file_info *fi);
 int op_releasedir(const char *path, struct fuse_file_info *fi);
-int op_getattr(const char *path, struct stat *stbuf);
+int op_getattr(const char *path, struct fuse_stat *stbuf);
 
-int op_mkdir(const char *path, mode_t mode);
+int op_mkdir(const char *path, fuse_mode_t mode);
 int op_rmdir(const char *path);
 int op_link(const char *path, const char *hardlink_path);
 int op_unlink(const char *path);
@@ -90,10 +125,10 @@ int op_readlink(const char *path, char *buf, size_t bufsiz);
 
 int op_rename(const char *path, const char *new_path);
 
-int op_chmod(const char *path, mode_t mode);
-int op_chown(const char *path, uid_t uid, gid_t gid);
+int op_chmod(const char *path, fuse_mode_t mode);
+int op_chown(const char *path, fuse_uid_t uid, fuse_gid_t gid);
 
-int op_statvfs(const char *path, struct statvfs *statvfs);
+int op_statvfs(const char *path, struct fuse_statvfs *statvfs);
 
 int op_setxattr(const char *path, const char *name,
 		const char *value, size_t size, int flags);
@@ -110,9 +145,9 @@ int op_listxattr(const char *path, char *list, size_t size);
 int op_removexattr(const char *path, const char *name);
 
 #if !defined(__FreeBSD__)
-int op_utimens(const char *path, const struct timespec tv[2]);
+int op_utimens(const char *path, const struct fuse_timespec tv[2]);
 #endif
 
-int op_utimes(const char *path, struct utimbuf *utimbuf);
+int op_utimes(const char *path, struct fuse_utimbuf *utimbuf);
 
 #endif

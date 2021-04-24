@@ -7,13 +7,10 @@
  * more details.
  */
 
-#include <unistd.h>
 #include <string.h>
 
 #if defined(__FreeBSD__)
 #include <sys/extattr.h>
-#else
-#include <sys/xattr.h>
 #endif
 
 #include <errno.h>

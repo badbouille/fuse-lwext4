@@ -16,7 +16,7 @@
 #include "ops.h"
 #include "lwext4.h"
 
-int op_chmod(const char *path, mode_t mode)
+int op_chmod(const char *path, fuse_mode_t mode)
 {
 	return LWEXT4_CALL(ext4_mode_set, path, mode);
 }

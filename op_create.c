@@ -13,7 +13,7 @@
 #include "ops.h"
 #include "lwext4.h"
 
-int op_create(const char *path, mode_t mode, struct fuse_file_info *fi)
+int op_create(const char *path, fuse_mode_t mode, struct fuse_file_info *fi)
 {
 	int rc;
 	ext4_file *f;

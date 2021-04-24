@@ -17,7 +17,7 @@
 #include "logging.h"
 #include "lwext4.h"
 
-int op_mkdir(const char *path, mode_t mode)
+int op_mkdir(const char *path, fuse_mode_t mode)
 {
 	int rc;
 
